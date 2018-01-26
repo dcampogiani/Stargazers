@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="InputHint" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/icons</item>
+    </style>
+
+    <style name="InputError" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/icons</item>
+    </style>
+
+    <!--Input field style-->
+    <style name="InputText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/icons</item>
+        <item name="colorControlActivated">@color/icons</item>
+    </style>
+
+</resources>

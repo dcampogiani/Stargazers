@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name" translatable="false">Stargazers</string>
+    <string name="owner">Owner</string>
+    <string name="repo">Repo</string>
+    <string name="search">Search</string>
+    <string name="mandatory_field">Mandatory</string>
+    <string name="no_stargazers">This repo ha not stargazers</string>
+
+</resources>
