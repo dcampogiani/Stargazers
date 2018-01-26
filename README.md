@@ -9,6 +9,18 @@ Show who starred a repo using [GitHub Api](https://developer.github.com/v3/activ
 * [Download](https://github.com/dcampogiani/Stargazers/blob/master/app/release/Stargazers.apk?raw=true)
 * [Live Demo](https://appetize.io/app/m838v2p4yaqnutbcd2dtb5wefr)
 
+## Building
+To build a debug version, run this from the root of the project:
+
+    ./gradlew app:assembleDebug
+    
+    
+## Testing
+
+To run the Unit Tests run the following command from the root of the project:
+
+	./gradlew app:testDebugUnitTest
+
 ## Languages, libraries and tools used
 
 * [Kotlin](https://kotlinlang.org/)
