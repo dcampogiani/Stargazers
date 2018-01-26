@@ -1,6 +1,5 @@
 package com.danielecampogiani.demo.inject
 
-
 import android.arch.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module

@@ -6,11 +6,11 @@ import com.danielecampogiani.demo.inject.AppComponent
 import com.danielecampogiani.demo.inject.AppModule
 import com.danielecampogiani.demo.inject.DaggerAppComponent
 
-class DemoApplication : Application() {
+class StargazersApplication : Application() {
 
     companion object {
         fun getAppComponent(context: Context): AppComponent {
-            val app = context.applicationContext as DemoApplication
+            val app = context.applicationContext as StargazersApplication
             return app.appComponent
         }
     }

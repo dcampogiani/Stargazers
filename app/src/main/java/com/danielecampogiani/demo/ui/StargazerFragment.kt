@@ -10,8 +10,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.danielecampogiani.demo.DemoApplication
 import com.danielecampogiani.demo.R
+import com.danielecampogiani.demo.StargazersApplication
 import com.danielecampogiani.demo.hideKeyBoard
 import com.danielecampogiani.demo.ui.adapter.StargazerAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -33,7 +33,7 @@ class StargazerFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        DemoApplication.getAppComponent(context).inject(this)
+        StargazersApplication.getAppComponent(context).inject(this)
         super.onAttach(context)
     }
 
