@@ -1,23 +1,23 @@
 package com.danielecampogiani.demo.usecase
 
 import com.danielecampogiani.demo.network.GitHubAPI
-import io.reactivex.Single
 import javax.inject.Inject
 
 class LoadFirstPageUseCaseImpl @Inject constructor(
-    private val gitHubApi: GitHubAPI
+        private val gitHubApi: GitHubAPI
 ) : LoadFirstPageUseCase {
 
-    override fun run(owner: String?, repoName: String?): Single<Result> {
+    override suspend fun run(owner: String?, repoName: String?): Result {
 
         if (owner.isNullOrBlank()) {
-            return Single.just(Result.MissingOwner)
+            return Result.MissingOwner
         }
 
         if (repoName.isNullOrBlank()) {
-            return Single.just(Result.MissingRepoName)
+            return Result.MissingRepoName
         }
 
-        return gitHubApi.getStargazers(owner!!, repoName!!).map(::mapResult)
+        val response = gitHubApi.getStargazers(owner!!, repoName!!).await()
+        return mapResult(response)
     }
 }

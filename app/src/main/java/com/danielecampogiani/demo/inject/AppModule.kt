@@ -3,7 +3,8 @@ package com.danielecampogiani.demo.inject
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.experimental.CommonPool
+import kotlin.coroutines.experimental.CoroutineContext
 
 @Module
 class AppModule(private val application: Application) {
@@ -12,5 +13,5 @@ class AppModule(private val application: Application) {
     fun provideContext() = application
 
     @Provides
-    fun provideBackgroundScheduler() = Schedulers.io()
+    fun provideBackgroundCoroutineContext(): CoroutineContext = CommonPool
 }

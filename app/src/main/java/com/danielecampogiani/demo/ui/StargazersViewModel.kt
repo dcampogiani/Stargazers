@@ -6,15 +6,15 @@ import android.arch.lifecycle.ViewModel
 import com.danielecampogiani.demo.usecase.LoadFirstPageUseCase
 import com.danielecampogiani.demo.usecase.LoadPageUseCase
 import com.danielecampogiani.demo.usecase.Result
-import io.reactivex.Scheduler
-import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
+import kotlin.coroutines.experimental.CoroutineContext
 
 class StargazersViewModel @Inject constructor(
-    private val loadFirstPageUseCase: LoadFirstPageUseCase,
-    private val loadPageUseCase: LoadPageUseCase,
-    private val scheduler: Scheduler
+        private val loadFirstPageUseCase: LoadFirstPageUseCase,
+        private val loadPageUseCase: LoadPageUseCase,
+        private val coroutineContext: CoroutineContext
 ) : ViewModel() {
 
     private val mutableViewState: MutableLiveData<ViewState> = MutableLiveData()
@@ -22,7 +22,7 @@ class StargazersViewModel @Inject constructor(
 
     private var nextPageRequest: String? = null
     private val currentStargazers: MutableList<Stargazer> = mutableListOf()
-    private val subscriptions = CompositeDisposable()
+    private val jobs: MutableList<Job> = mutableListOf()
 
     val viewState: LiveData<ViewState>
         get() = mutableViewState
@@ -33,29 +33,39 @@ class StargazersViewModel @Inject constructor(
     fun fetchFirstPage(owner: String?, repoName: String?) {
         currentStargazers.clear()
         mutableInfiniteScrollState.value = ViewState.InfiniteScrollState.Enabled
-        val useCaseResult = loadFirstPageUseCase.run(owner, repoName)
-        handleUseCaseResult(useCaseResult)
-    }
-
-    fun fetchNextPage() {
-        nextPageRequest?.let { nextPageUrl ->
-            val useCaseResult = loadPageUseCase.run(nextPageUrl)
-            handleUseCaseResult(useCaseResult)
+        runUseCase {
+            loadFirstPageUseCase.run(owner, repoName)
         }
     }
 
-    private fun handleUseCaseResult(result: Single<Result>) {
-        val disposable = result.toObservable()
-            .subscribeOn(scheduler)
-            .doOnNext(this::applySideEffects)
-            .map(this::mapToViewState)
-            .startWith(ViewState.Loading)
-            .subscribe(
-                mutableViewState::postValue,
-                { mutableViewState.postValue(ViewState.Error(it.message ?: it.toString())) }
-            )
-        subscriptions.add(disposable)
+
+    fun fetchNextPage() {
+        nextPageRequest?.let { nextPageUrl ->
+            runUseCase {
+                loadPageUseCase.run(nextPageUrl)
+            }
+        }
     }
+
+    private fun runUseCase(useCase: suspend () -> Result) {
+        mutableViewState.postValue(ViewState.Loading)
+
+        val job = launch(coroutineContext) {
+            try {
+                val useCaseResult = useCase()
+                applySideEffects(useCaseResult)
+                val viewState = mapToViewState(useCaseResult)
+                mutableViewState.postValue(viewState)
+
+            } catch (e: Exception) {
+                mutableViewState.postValue(ViewState.Error(e.message ?: e.toString()))
+            }
+        }
+
+        jobs.add(job)
+
+    }
+
 
     private fun applySideEffects(result: Result?) {
         when (result) {
@@ -89,7 +99,7 @@ class StargazersViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        subscriptions.dispose()
+        jobs.forEach { it.cancel() }
         super.onCleared()
     }
 }
