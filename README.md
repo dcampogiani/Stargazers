@@ -1,4 +1,4 @@
-# Stargazer
+# Stargazer [![Build Status](https://travis-ci.org/dcampogiani/Stargazers.svg?branch=master)](https://travis-ci.org/dcampogiani/Stargazers)
 
 Show who starred a repo using [GitHub Api](https://developer.github.com/v3/activity/starring/#list-stargazers)
 
