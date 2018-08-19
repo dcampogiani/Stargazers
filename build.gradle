@@ -2,15 +2,15 @@
 
 buildscript {
     ext.versions = [
-            'android_gradle'   : '3.0.1',
-            'support_library'  : '27.0.2',
-            'constraint_layout': '1.1.0-beta4',
-            'arch_comp'        : '1.0.0',
-            'kotlin'           : '1.2.21',
-            'dagger'           : '2.14.1',
-            'espresso'         : '3.0.1',
-            'retrofit'         : '2.3.0',
-            'glide'            : '4.5.0',
+            'android_gradle'   : '3.1.4',
+            'support_library'  : '27.1.1',
+            'constraint_layout': '1.1.2',
+            'arch_comp'        : '1.1.1',
+            'kotlin'           : '1.2.61',
+            'dagger'           : '2.17',
+            'espresso'         : '3.0.2',
+            'retrofit'         : '2.4.0',
+            'glide'            : '4.8.0',
             'mockito'          : '1.10.19',
             'junit'            : '4.12'
 
@@ -23,6 +23,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.android_gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
     }
 }
 

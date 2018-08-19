@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "com.github.ben-manes.versions"
 
 
 android {
@@ -23,7 +24,7 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${versions.kotlin}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
     implementation "com.android.support:appcompat-v7:${versions.support_library}"
     implementation "com.android.support:recyclerview-v7:${versions.support_library}"
     implementation "com.android.support:design:${versions.support_library}"
@@ -50,7 +51,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:${versions.mockito}"
     testImplementation "android.arch.core:core-testing:${versions.arch_comp}"
 
-    androidTestImplementation "com.android.support.test:runner:1.0.1"
+    androidTestImplementation "com.android.support.test:runner:1.0.2"
     androidTestImplementation("com.android.support.test.espresso:espresso-core:${versions.espresso}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
