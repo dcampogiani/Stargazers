@@ -1,28 +1,31 @@
 package com.danielecampogiani.demo.usecase
 
-import com.danielecampogiani.demo.mockk
 import com.danielecampogiani.demo.network.ApiStargazer
 import com.danielecampogiani.demo.network.GitHubAPI
-import io.reactivex.Single
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.experimental.CompletableDeferred
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import retrofit2.Response
 
 class LoadPageUseCaseImplTest {
 
-    val api: GitHubAPI = mockk()
+    val api: GitHubAPI = mock()
 
     val sut: LoadPageUseCaseImpl = LoadPageUseCaseImpl(api)
 
     @Test
     fun invokeApiAndMap() {
-        val mockApiResult = Single.just(Response.success(emptyList<ApiStargazer>()))
-        `when`(api.getPage("url")).thenReturn(mockApiResult)
 
-        val resultSingle = sut.run("url")
-        val resultValue = resultSingle.blockingGet()
+        runBlocking {
+            val deferred = CompletableDeferred(Response.success(emptyList<ApiStargazer>()))
+            whenever(api.getPage("url")) doReturn deferred
+            val resultValue = sut.run("url")
 
-        assertTrue(resultValue == Result.Empty)
+            assertTrue(resultValue == Result.Empty)
+        }
     }
 }

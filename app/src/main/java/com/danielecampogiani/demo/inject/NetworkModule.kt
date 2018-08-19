@@ -1,10 +1,10 @@
 package com.danielecampogiani.demo.inject
 
 import com.danielecampogiani.demo.network.GitHubAPI
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import javax.inject.Singleton
 
@@ -15,10 +15,10 @@ internal class NetworkModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build()
+                .baseUrl("https://api.github.com/")
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build()
     }
 
     @Provides

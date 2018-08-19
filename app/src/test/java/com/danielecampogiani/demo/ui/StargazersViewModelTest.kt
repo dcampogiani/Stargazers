@@ -2,17 +2,24 @@ package com.danielecampogiani.demo.ui
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.danielecampogiani.demo.mockk
+import com.danielecampogiani.demo.network.ApiStargazer
+import com.danielecampogiani.demo.network.GitHubAPI
 import com.danielecampogiani.demo.usecase.LoadFirstPageUseCase
+import com.danielecampogiani.demo.usecase.LoadFirstPageUseCaseImpl
 import com.danielecampogiani.demo.usecase.LoadPageUseCase
-import com.danielecampogiani.demo.usecase.Result
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import com.danielecampogiani.demo.usecase.LoadPageUseCaseImpl
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.*
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
+import retrofit2.Response
+import java.util.concurrent.TimeUnit
+import kotlin.coroutines.experimental.CoroutineContext
 
 class StargazersViewModelTest {
 
@@ -20,115 +27,131 @@ class StargazersViewModelTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    val loadFirstPageUseCase: LoadFirstPageUseCase = mockk()
-    val loadPageUseCase: LoadPageUseCase = mockk()
+    val api: GitHubAPI = mock()
 
-    val sut: StargazersViewModel = StargazersViewModel(loadFirstPageUseCase, loadPageUseCase, Schedulers.trampoline())
+    val loadFirstPageUseCase: LoadFirstPageUseCase = LoadFirstPageUseCaseImpl(api)
+    val loadPageUseCase: LoadPageUseCase = LoadPageUseCaseImpl(api)
+
+    val sut: StargazersViewModel = StargazersViewModel(loadFirstPageUseCase, loadPageUseCase, DirectCoroutineContext())
 
     @Test
     fun missingOwner() {
-        `when`(loadFirstPageUseCase.run(null, "repoName")).thenReturn(Single.just(Result.MissingOwner))
 
-        val viewStateObserver: Observer<ViewState> = mockk()
-        val scrollObserver: Observer<ViewState.InfiniteScrollState> = mockk()
-        sut.viewState.observeForever(viewStateObserver)
-        sut.scrollState.observeForever(scrollObserver)
+        runBlocking {
 
-        sut.fetchFirstPage(null, "repoName")
+            sut.fetchFirstPage("", "repoName")
 
-        verify(viewStateObserver).onChanged(ViewState.Loading)
-        verify(viewStateObserver).onChanged(ViewState.MissingOwner)
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+            val viewStateObserver: Observer<ViewState> = mock()
+            val scrollObserver: Observer<ViewState.InfiniteScrollState> = mock()
+            sut.viewState.observeForever(viewStateObserver)
+            sut.scrollState.observeForever(scrollObserver)
+
+
+            verify(viewStateObserver).onChanged(ViewState.MissingOwner)
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+        }
+
+
     }
 
     @Test
     fun missingRepo() {
-        `when`(loadFirstPageUseCase.run("owner", null)).thenReturn(Single.just(Result.MissingRepoName))
 
-        val viewStateObserver: Observer<ViewState> = mockk()
-        val scrollObserver: Observer<ViewState.InfiniteScrollState> = mockk()
-        sut.viewState.observeForever(viewStateObserver)
-        sut.scrollState.observeForever(scrollObserver)
+        runBlocking {
 
-        sut.fetchFirstPage("owner", null)
+            val viewStateObserver: Observer<ViewState> = mock()
+            val scrollObserver: Observer<ViewState.InfiniteScrollState> = mock()
+            sut.viewState.observeForever(viewStateObserver)
+            sut.scrollState.observeForever(scrollObserver)
 
-        verify(viewStateObserver).onChanged(ViewState.Loading)
-        verify(viewStateObserver).onChanged(ViewState.MissingRepoName)
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+            sut.fetchFirstPage("owner", null)
+
+            verify(viewStateObserver).onChanged(ViewState.Loading)
+            verify(viewStateObserver).onChanged(ViewState.MissingRepoName)
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+        }
+
     }
 
     @Test
     fun empty() {
-        `when`(loadFirstPageUseCase.run("owner", "repo")).thenReturn(Single.just(Result.Empty))
 
-        val viewStateObserver: Observer<ViewState> = mockk()
-        val scrollObserver: Observer<ViewState.InfiniteScrollState> = mockk()
-        sut.viewState.observeForever(viewStateObserver)
-        sut.scrollState.observeForever(scrollObserver)
+        runBlocking {
 
-        sut.fetchFirstPage("owner", "repo")
+            whenever(api.getStargazers("owner", "repo")) doReturn CompletableDeferred(Response.success(emptyList()))
 
-        verify(viewStateObserver).onChanged(ViewState.Loading)
-        verify(viewStateObserver).onChanged(ViewState.Empty)
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Disabled)
+            val viewStateObserver: Observer<ViewState> = mock()
+            val scrollObserver: Observer<ViewState.InfiniteScrollState> = mock()
+            sut.viewState.observeForever(viewStateObserver)
+            sut.scrollState.observeForever(scrollObserver)
+
+            sut.fetchFirstPage("owner", "repo")
+
+            verify(viewStateObserver).onChanged(ViewState.Loading)
+            verify(viewStateObserver).onChanged(ViewState.Empty)
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Disabled)
+        }
+
+
     }
 
     @Test
     fun error() {
-        `when`(loadFirstPageUseCase.run("owner", "repo")).thenReturn(Single.just(Result.Error("error message")))
 
-        val viewStateObserver: Observer<ViewState> = mockk()
-        val scrollObserver: Observer<ViewState.InfiniteScrollState> = mockk()
-        sut.viewState.observeForever(viewStateObserver)
-        sut.scrollState.observeForever(scrollObserver)
+        runBlocking {
 
-        sut.fetchFirstPage("owner", "repo")
+            val response = Response.error<List<ApiStargazer>>(404, ResponseBody.create(MediaType.parse("application/json"), "error message"))
 
-        verify(viewStateObserver).onChanged(ViewState.Loading)
-        verify(viewStateObserver).onChanged(ViewState.Error("error message"))
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Disabled)
+            whenever(api.getStargazers("owner", "repo")) doReturn CompletableDeferred(response)
+
+            val viewStateObserver: Observer<ViewState> = mock()
+            val scrollObserver: Observer<ViewState.InfiniteScrollState> = mock()
+            sut.viewState.observeForever(viewStateObserver)
+            sut.scrollState.observeForever(scrollObserver)
+
+            sut.fetchFirstPage("owner", "repo")
+
+            verify(viewStateObserver).onChanged(ViewState.Loading)
+            verify(viewStateObserver).onChanged(ViewState.Error("error message"))
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Disabled)
+        }
+
+
     }
 
     @Test
     fun firstPage() {
-        val firstPageItems = listOf(Stargazer("firstAvatar", "firstUserName"))
-        `when`(loadFirstPageUseCase.run("owner", "repo")).thenReturn(Single.just(Result.Page(firstPageItems, "nextPageUrl")))
 
-        val viewStateObserver: Observer<ViewState> = mockk()
-        val scrollObserver: Observer<ViewState.InfiniteScrollState> = mockk()
-        sut.viewState.observeForever(viewStateObserver)
-        sut.scrollState.observeForever(scrollObserver)
+        runBlocking {
 
-        sut.fetchFirstPage("owner", "repo")
+            val response = Response.success(listOf(ApiStargazer("firstAvatar", "firstUserName")))
 
-        verify(viewStateObserver).onChanged(ViewState.Loading)
-        verify(viewStateObserver).onChanged(ViewState.Result(firstPageItems))
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+            whenever(api.getStargazers("owner", "repo")) doReturn CompletableDeferred(response)
+
+            val viewStateObserver: Observer<ViewState> = mock()
+            val scrollObserver: Observer<ViewState.InfiniteScrollState> = mock()
+            sut.viewState.observeForever(viewStateObserver)
+            sut.scrollState.observeForever(scrollObserver)
+
+            sut.fetchFirstPage("owner", "repo")
+
+            verify(viewStateObserver).onChanged(ViewState.Loading)
+            verify(viewStateObserver).onChanged(ViewState.Result(listOf(Stargazer("firstAvatar", "firstUserName"))))
+            verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
+        }
+
     }
 
-    @Test
-    fun firstAndSecondPage() {
-        val firstPageItems = listOf(Stargazer("firstAvatar", "firstUserName"))
-        val secondPageItems = listOf(Stargazer("secondAvatar", "secondUserName"))
-        `when`(loadFirstPageUseCase.run("owner", "repo")).thenReturn(Single.just(Result.Page(firstPageItems, "secondPageUrl")))
-        `when`(loadPageUseCase.run("secondPageUrl")).thenReturn(Single.just(Result.LastPage(secondPageItems)))
+    class DirectCoroutineContext : CoroutineDispatcher(), Delay {
+        override fun scheduleResumeAfterDelay(time: Long, unit: TimeUnit,
+                                              continuation: CancellableContinuation<Unit>) {
+            continuation.resume(Unit)
+        }
 
-        val viewStateObserver: Observer<ViewState> = mockk()
-        val scrollObserver: Observer<ViewState.InfiniteScrollState> = mockk()
-        sut.viewState.observeForever(viewStateObserver)
-        sut.scrollState.observeForever(scrollObserver)
-
-        sut.fetchFirstPage("owner", "repo")
-
-        verify(viewStateObserver).onChanged(ViewState.Loading)
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Enabled)
-
-        sut.fetchNextPage()
-
-        verify(viewStateObserver, times(2)).onChanged(ViewState.Loading)
-        verify(viewStateObserver, times(2)).onChanged(ViewState.Result(firstPageItems + secondPageItems))
-        verify(scrollObserver).onChanged(ViewState.InfiniteScrollState.Disabled)
+        override fun dispatch(context: CoroutineContext, block: Runnable) {
+            block.run()
+        }
     }
 }

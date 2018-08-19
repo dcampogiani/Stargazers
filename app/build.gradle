@@ -23,6 +23,12 @@ android {
     }
 }
 
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
     implementation "com.android.support:appcompat-v7:${versions.support_library}"
@@ -42,13 +48,11 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-jackson:${versions.retrofit}"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
-
-
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:${versions.coroutines_adapter}"
 
 
     testImplementation "junit:junit:${versions.junit}"
-    testImplementation "org.mockito:mockito-core:${versions.mockito}"
+    testImplementation "com.nhaarman:mockito-kotlin:${versions.mockito}"
     testImplementation "android.arch.core:core-testing:${versions.arch_comp}"
 
     androidTestImplementation "com.android.support.test:runner:1.0.2"
