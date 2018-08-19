@@ -26,10 +26,7 @@ To run the Unit Tests run the following command from the root of the project:
 * [Kotlin](https://kotlinlang.org/)
 * [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/index.html)
 * [Dagger](https://google.github.io/dagger/)
-* [RxJava](https://github.com/ReactiveX/RxJava)
 * [Glide](https://github.com/bumptech/glide)
-* [Retrofit](http://square.github.io/retrofit/)
+* [Retrofit](http://square.github.io/retrofit/) with [Coroutine Adapter](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter)
 * [JUnit](http://junit.org/junit4/)
-* [Mockito](http://site.mockito.org/)
-
-
+* [Mockito-Kotlin](https://github.com/nhaarman/mockito-kotlin)
