@@ -6,14 +6,14 @@ apply plugin: "com.github.ben-manes.versions"
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.danielecampogiani.stargazers"
         minSdkVersion 17
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -31,14 +31,14 @@ kotlin {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
-    implementation "com.android.support:appcompat-v7:${versions.support_library}"
-    implementation "com.android.support:recyclerview-v7:${versions.support_library}"
-    implementation "com.android.support:design:${versions.support_library}"
-    implementation "com.android.support.constraint:constraint-layout:${versions.constraint_layout}"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
-    implementation "android.arch.lifecycle:extensions:${versions.arch_comp}"
-    implementation "com.android.support:support-v4:${versions.support_library}"
-    kapt "android.arch.lifecycle:compiler:${versions.arch_comp}"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
     implementation "com.google.dagger:dagger:${versions.dagger}"
     kapt "com.google.dagger:dagger-compiler:${versions.dagger}"
@@ -53,10 +53,10 @@ dependencies {
 
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "com.nhaarman:mockito-kotlin:${versions.mockito}"
-    testImplementation "android.arch.core:core-testing:${versions.arch_comp}"
+    testImplementation 'androidx.arch.core:core-testing:2.0.0'
 
-    androidTestImplementation "com.android.support.test:runner:1.0.2"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:${versions.espresso}", {
+    androidTestImplementation "androidx.test:runner:1.1.0-alpha4"
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

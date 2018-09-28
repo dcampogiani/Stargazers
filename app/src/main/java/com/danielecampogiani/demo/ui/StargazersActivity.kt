@@ -1,7 +1,7 @@
 package com.danielecampogiani.demo.ui
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.danielecampogiani.demo.R
 
 class StargazersActivity : AppCompatActivity() {

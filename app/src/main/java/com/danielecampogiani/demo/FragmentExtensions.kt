@@ -1,10 +1,9 @@
 package com.danielecampogiani.demo
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.support.v4.app.Fragment
 import android.view.inputmethod.InputMethodManager
 
-fun Fragment.hideKeyBoard() {
+fun androidx.fragment.app.Fragment.hideKeyBoard() {
 
     activity?.let {
 

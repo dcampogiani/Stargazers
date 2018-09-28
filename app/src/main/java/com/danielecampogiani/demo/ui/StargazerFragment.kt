@@ -1,15 +1,13 @@
 package com.danielecampogiani.demo.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.danielecampogiani.demo.R
 import com.danielecampogiani.demo.StargazersApplication
 import com.danielecampogiani.demo.hideKeyBoard
@@ -17,7 +15,7 @@ import com.danielecampogiani.demo.ui.adapter.StargazerAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
 
-class StargazerFragment : Fragment() {
+class StargazerFragment : androidx.fragment.app.Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -50,7 +48,7 @@ class StargazerFragment : Fragment() {
         val stargazerAdapter = StargazerAdapter()
         recycler_view.adapter = stargazerAdapter
 
-        val linearLayoutManager = recycler_view.layoutManager as LinearLayoutManager
+        val linearLayoutManager = recycler_view.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val endlessScrollListener = EndlessRecyclerViewScrollListener(linearLayoutManager, viewModel::fetchNextPage)
 
         search_button.setOnClickListener {
