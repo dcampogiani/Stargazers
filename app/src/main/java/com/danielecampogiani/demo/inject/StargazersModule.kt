@@ -1,6 +1,6 @@
 package com.danielecampogiani.demo.inject
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.danielecampogiani.demo.ui.StargazersViewModel
 import com.danielecampogiani.demo.usecase.LoadFirstPageUseCase
 import com.danielecampogiani.demo.usecase.LoadFirstPageUseCaseImpl

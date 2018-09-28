@@ -1,7 +1,7 @@
 package com.danielecampogiani.demo.ui
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.danielecampogiani.demo.network.ApiStargazer
 import com.danielecampogiani.demo.network.GitHubAPI
 import com.danielecampogiani.demo.usecase.LoadFirstPageUseCase

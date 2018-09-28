@@ -1,13 +1,12 @@
 package com.danielecampogiani.demo.ui.adapter
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import com.danielecampogiani.demo.R
 import com.danielecampogiani.demo.ui.Stargazer
 
-class StargazerAdapter(private var data: MutableList<Stargazer> = mutableListOf()) : RecyclerView.Adapter<ViewHolder>() {
+class StargazerAdapter(private var data: MutableList<Stargazer> = mutableListOf()) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder>() {
 
     init {
         setHasStableIds(true)

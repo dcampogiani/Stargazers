@@ -1,14 +1,11 @@
 package com.danielecampogiani.demo.ui
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-
 /**
  * Based on https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView
  */
 class EndlessRecyclerViewScrollListener(
-    private val layoutManager: LinearLayoutManager,
-    private val loadMore: () -> Unit) : RecyclerView.OnScrollListener() {
+        private val layoutManager: androidx.recyclerview.widget.LinearLayoutManager,
+        private val loadMore: () -> Unit) : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
     private var visibleThreshold = 5
@@ -24,7 +21,7 @@ class EndlessRecyclerViewScrollListener(
     // This happens many times a second during a scroll, so be wary of the code you place here.
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
-    override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
+    override fun onScrolled(view: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
         val totalItemCount = layoutManager.itemCount
 
