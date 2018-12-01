@@ -12,14 +12,16 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.Response
-import java.util.concurrent.TimeUnit
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 class StargazersViewModelTest {
 
@@ -144,11 +146,7 @@ class StargazersViewModelTest {
 
     }
 
-    class DirectCoroutineContext : CoroutineDispatcher(), Delay {
-        override fun scheduleResumeAfterDelay(time: Long, unit: TimeUnit,
-                                              continuation: CancellableContinuation<Unit>) {
-            continuation.resume(Unit)
-        }
+    class DirectCoroutineContext : CoroutineDispatcher() {
 
         override fun dispatch(context: CoroutineContext, block: Runnable) {
             block.run()

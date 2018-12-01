@@ -1,7 +1,7 @@
 package com.danielecampogiani.demo.inject
 
 import com.danielecampogiani.demo.network.GitHubAPI
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
