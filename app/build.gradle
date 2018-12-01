@@ -23,19 +23,15 @@ android {
     }
 }
 
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
@@ -48,14 +44,15 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-jackson:${versions.retrofit}"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:${versions.coroutines_adapter}"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${versions.coroutines_adapter}"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines_android}"
 
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "com.nhaarman:mockito-kotlin:${versions.mockito}"
     testImplementation 'androidx.arch.core:core-testing:2.0.0'
 
-    androidTestImplementation "androidx.test:runner:1.1.0-alpha4"
+    androidTestImplementation "androidx.test:runner:1.1.0"
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

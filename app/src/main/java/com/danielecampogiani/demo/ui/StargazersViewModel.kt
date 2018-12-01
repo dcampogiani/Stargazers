@@ -6,23 +6,21 @@ import androidx.lifecycle.ViewModel
 import com.danielecampogiani.demo.usecase.LoadFirstPageUseCase
 import com.danielecampogiani.demo.usecase.LoadPageUseCase
 import com.danielecampogiani.demo.usecase.Result
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 class StargazersViewModel @Inject constructor(
         private val loadFirstPageUseCase: LoadFirstPageUseCase,
         private val loadPageUseCase: LoadPageUseCase,
         private val coroutineContext: CoroutineContext
-) : ViewModel() {
+) : ScopedViewModel() {
 
     private val mutableViewState: MutableLiveData<ViewState> = MutableLiveData()
     private val mutableInfiniteScrollState: MutableLiveData<ViewState.InfiniteScrollState> = MutableLiveData()
 
     private var nextPageRequest: String? = null
     private val currentStargazers: MutableList<Stargazer> = mutableListOf()
-    private val jobs: MutableList<Job> = mutableListOf()
 
     val viewState: LiveData<ViewState>
         get() = mutableViewState
@@ -50,7 +48,7 @@ class StargazersViewModel @Inject constructor(
     private fun runUseCase(useCase: suspend () -> Result) {
         mutableViewState.postValue(ViewState.Loading)
 
-        val job = launch(coroutineContext) {
+        scope.launch(coroutineContext) {
             try {
                 val useCaseResult = useCase()
                 applySideEffects(useCaseResult)
@@ -61,8 +59,6 @@ class StargazersViewModel @Inject constructor(
                 mutableViewState.postValue(ViewState.Error(e.message ?: e.toString()))
             }
         }
-
-        jobs.add(job)
 
     }
 
@@ -96,10 +92,5 @@ class StargazersViewModel @Inject constructor(
         is Result.Page -> ViewState.Result(currentStargazers)
         is Result.LastPage -> ViewState.Result(currentStargazers)
         is Result.Error -> ViewState.Error(useCaseResult.message)
-    }
-
-    override fun onCleared() {
-        jobs.forEach { it.cancel() }
-        super.onCleared()
     }
 }
