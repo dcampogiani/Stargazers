@@ -56,7 +56,7 @@ class StargazerFragment : androidx.fragment.app.Fragment() {
             viewModel.fetchFirstPage(owner_edit_text.text.toString(), repo_name_edit_text.text.toString())
         }
 
-        viewModel.viewState.observe(this, Observer {
+        viewModel.viewState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 ViewState.MissingOwner -> showMissingOwner()
                 ViewState.MissingRepoName -> showMissingRepoName()
@@ -67,7 +67,7 @@ class StargazerFragment : androidx.fragment.app.Fragment() {
             }
         })
 
-        viewModel.scrollState.observe(this, Observer {
+        viewModel.scrollState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 ViewState.InfiniteScrollState.Enabled -> recycler_view.addOnScrollListener(endlessScrollListener)
                 ViewState.InfiniteScrollState.Disabled -> recycler_view.removeOnScrollListener(endlessScrollListener)

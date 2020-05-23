@@ -17,7 +17,7 @@ class LoadFirstPageUseCaseImpl @Inject constructor(
             return Result.MissingRepoName
         }
 
-        val response = gitHubApi.getStargazers(owner!!, repoName!!).await()
+        val response = gitHubApi.getStargazers(owner, repoName).await()
         return mapResult(response)
     }
 }

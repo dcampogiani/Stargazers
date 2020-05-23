@@ -34,6 +34,6 @@ private fun mapNotSuccessful(result: Response<List<ApiStargazer>>) =
 
 private fun mapNetworkItem(networkModel: ApiStargazer): Stargazer? {
     return if (!networkModel.avatarUrl.isNullOrBlank() && !networkModel.userName.isNullOrBlank())
-        Stargazer(networkModel.avatarUrl!!, networkModel.userName!!)
+        Stargazer(networkModel.avatarUrl, networkModel.userName)
     else null
 }
