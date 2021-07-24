@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.danielecampogiani.demo.R
 import com.danielecampogiani.demo.StargazersApplication
 import com.danielecampogiani.demo.hideKeyBoard
@@ -35,28 +33,37 @@ class StargazerFragment : androidx.fragment.app.Fragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)[StargazersViewModel::class.java]
+        val viewModel = ViewModelProvider(this, viewModelFactory)[StargazersViewModel::class.java]
 
         recycler_view.setHasFixedSize(true)
         val stargazerAdapter = StargazerAdapter()
         recycler_view.adapter = stargazerAdapter
 
-        val linearLayoutManager = recycler_view.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
-        val endlessScrollListener = EndlessRecyclerViewScrollListener(linearLayoutManager, viewModel::fetchNextPage)
+        val linearLayoutManager =
+            recycler_view.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+        val endlessScrollListener =
+            EndlessRecyclerViewScrollListener(linearLayoutManager, viewModel::fetchNextPage)
 
         search_button.setOnClickListener {
             hideKeyBoard()
-            viewModel.fetchFirstPage(owner_edit_text.text.toString(), repo_name_edit_text.text.toString())
+            viewModel.fetchFirstPage(
+                owner_edit_text.text.toString(),
+                repo_name_edit_text.text.toString()
+            )
         }
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer {
+        viewModel.viewState.observe(viewLifecycleOwner, {
             when (it) {
                 ViewState.MissingOwner -> showMissingOwner()
                 ViewState.MissingRepoName -> showMissingRepoName()
@@ -67,10 +74,14 @@ class StargazerFragment : androidx.fragment.app.Fragment() {
             }
         })
 
-        viewModel.scrollState.observe(viewLifecycleOwner, Observer {
+        viewModel.scrollState.observe(viewLifecycleOwner, {
             when (it) {
-                ViewState.InfiniteScrollState.Enabled -> recycler_view.addOnScrollListener(endlessScrollListener)
-                ViewState.InfiniteScrollState.Disabled -> recycler_view.removeOnScrollListener(endlessScrollListener)
+                ViewState.InfiniteScrollState.Enabled -> recycler_view.addOnScrollListener(
+                    endlessScrollListener
+                )
+                ViewState.InfiniteScrollState.Disabled -> recycler_view.removeOnScrollListener(
+                    endlessScrollListener
+                )
             }
         })
     }

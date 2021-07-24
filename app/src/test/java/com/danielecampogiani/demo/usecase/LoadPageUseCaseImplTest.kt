@@ -5,7 +5,7 @@ import com.danielecampogiani.demo.network.GitHubAPI
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import junit.framework.Assert.assertTrue
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -13,9 +13,9 @@ import retrofit2.Response
 
 class LoadPageUseCaseImplTest {
 
-    val api: GitHubAPI = mock()
+    private val api: GitHubAPI = mock()
 
-    val sut: LoadPageUseCaseImpl = LoadPageUseCaseImpl(api)
+    private val sut: LoadPageUseCaseImpl = LoadPageUseCaseImpl(api)
 
     @Test
     fun invokeApiAndMap() {

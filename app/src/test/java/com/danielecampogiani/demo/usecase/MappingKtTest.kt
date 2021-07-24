@@ -1,8 +1,8 @@
 package com.danielecampogiani.demo.usecase
 
 import com.danielecampogiani.demo.network.ApiStargazer
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import okhttp3.Headers
 import okhttp3.MediaType
 import okhttp3.ResponseBody
@@ -11,7 +11,7 @@ import retrofit2.Response
 
 class MappingKtTest {
 
-    val dummyData = ApiStargazer("avatarUrl", "userName")
+    private val dummyData = ApiStargazer("avatarUrl", "userName")
 
     @Test
     fun successfulWithValidItems() {
