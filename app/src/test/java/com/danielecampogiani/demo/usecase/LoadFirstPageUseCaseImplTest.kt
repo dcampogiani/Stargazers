@@ -5,7 +5,7 @@ import com.danielecampogiani.demo.network.GitHubAPI
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import junit.framework.Assert.assertTrue
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -14,9 +14,9 @@ import retrofit2.Response
 
 class LoadFirstPageUseCaseImplTest {
 
-    val api: GitHubAPI = mock()
+    private val api: GitHubAPI = mock()
 
-    val sut: LoadFirstPageUseCaseImpl = LoadFirstPageUseCaseImpl(api)
+    private val sut: LoadFirstPageUseCaseImpl = LoadFirstPageUseCaseImpl(api)
 
     @Before
     fun setUp() {
