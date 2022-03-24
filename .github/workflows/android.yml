@@ -13,7 +13,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew testDebugUnitTest assembleDebug
+    - uses: burrunan/gradle-cache-action@v1
+      name: Build
+      with:
+        arguments: testDebugUnitTest assembleDebug
+        gradle-version: wrapper
